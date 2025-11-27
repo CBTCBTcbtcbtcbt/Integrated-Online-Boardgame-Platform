@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>注册账号</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+        /* 面板通用样式 */
+        .panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        
+        /* 按钮通用样式 */
+        button {
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        
+        /* 输入框样式 */
+        input, select {
+            padding: 5px;
+            margin: 5px 0;
+            width: 200px;
+        }
+        
+        .success-message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+  <!-- 注册面板 -->
+  <div id="register-panel" class="panel" style="display: ''">
+      <h2>注册</h2>
+      账号: <input id="register-account"><br>
+      游戏ID: <input id="register-id"><br>
+      密码: <input id="register-password" type="password"><br>
+      <button id="register-submit-btn">注册</button>
+      <button id="back-to-login-btn">返回登录</button>
+      <p id="register-message" class="message"></p>
+  </div>
+  <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+</body>
+</html>

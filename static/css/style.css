@@ -1,0 +1,23 @@
+/*style.css*/
+body { font-family: sans-serif; padding:20px; }
+#board { border-collapse: collapse; margin-top:10px; }
+#board td {
+  width: 30px; height: 30px;
+  border: 1px solid #888;
+  text-align: center;
+  cursor: pointer;
+  font-size: 12px;
+}
+/* 不同玩家背景色 */
+.p4 { background:#d0e0ff; }
+.p1 { background:#ffc0c0; }
+.p3 { background:#f0e969; }
+.p2 { background:#90f090; }
+.pp4 { background:#6d82ac; }
+.pp1 { background:#a74141; }
+.pp3 { background:#b4ad3a; }
+.pp2 { background:#358735; }
+.p-1 { background:#3B3B3B; }
+.p-2 { background:#b3b3b3; }
+/* 控制面板 */
+#infoBar { margin-bottom:10px; }
