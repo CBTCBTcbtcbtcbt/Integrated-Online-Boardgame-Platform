@@ -303,6 +303,27 @@ def roulette():
     print("访问了roulette路由")
     return render_template('roulette.html')
 
+
+@app.route('/ccb')
+def ccb():
+    """
+    ccb游戏页面路由
+    
+    HTTP方法：GET
+    路由：/ccb
+    
+    功能：
+        渲染ccb游戏页面，用于测试前后端通信
+        提供输入框和输出显示区域
+    
+    参数：无
+    
+    返回值：
+        渲染后的ccb.html模板
+    """
+    print("访问了ccb路由")
+    return render_template('ccb.html')
+
 if __name__ == '__main__':
     """
     应用程序入口点

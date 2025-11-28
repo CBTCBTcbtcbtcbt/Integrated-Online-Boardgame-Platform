@@ -8,7 +8,7 @@ from flask import request
 from platform.auth import get_user
 
 # 存储token到Socket会话ID的映射（用于向特定用户发送消息）
-token_to_sid = {}  # 键: token, 值: socket session id
+account_to_sid = {}  # 键: token, 值: socket session id
 # 存储Socket会话ID到token的映射
 sid_to_token = {}  # 键: socket session id, 值: token
 
@@ -46,7 +46,7 @@ def init_socket_events(socketio, room_manager):
             account = verify_token(token)
             if account:
                 sid = request.sid
-                token_to_sid[token] = sid
+                account_to_sid[account] = sid
                 sid_to_token[sid] = token
                 print(f"用户通过token连接成功: account={account}, sid={sid}")
                 return True
@@ -55,6 +55,41 @@ def init_socket_events(socketio, room_manager):
         print(f"Socket连接: sid={request.sid}, 未提供有效token")
         return True
     
+    # 重新连接事件
+    @socketio.on('token_reconnect')
+    def handle_token_reconnect(data):
+        """
+        处理Socket重新连接事件，验证token
+        
+        参数：
+        - data: 包含认证信息的字典，包含token字段
+        
+        功能流程：
+        1. 从data中获取token
+        2. 验证token是否有效
+        3. 如果有效，建立token与sid的映射
+        4. 如果无效，发送错误响应
+        """
+        token = data.get('token')
+        
+        if token:
+            account = verify_token(token)
+            if account:
+                sid = request.sid
+                account_to_sid[account] = sid
+                sid_to_token[sid] = token
+                print(f"用户通过token重新连接成功: account={account}, sid={sid}")
+                room_id=get_user(account).get('room')
+                if(room_id):
+                    print(f"用户 {account} 重新连接后加入房间: {room_id}")
+                return
+        
+        # Token无效或不存在，发送错误响应
+        print(f"Socket重新连接失败: sid={request.sid}, 无效token")
+        emit('reconnect_response', {
+            'ok': False,
+            'msg': '无效的token，重新连接失败'
+        })
     # 登录事件
     @socketio.on('login')
     def handle_login(data):
@@ -88,7 +123,7 @@ def init_socket_events(socketio, room_manager):
             # 登录成功，保存token与sid的映射
             token = result['token']
             sid = request.sid
-            #token_to_sid[token] = sid
+            #account_to_sid[account] = sid
             sid_to_token[sid] = token
             
             print(f"用户 {account} 登录成功，token已生成")
