@@ -522,10 +522,41 @@ function loadAvailableGames() {
     type: 'GET',
     success: (response) => {
       const gameSelect = $('#game-select');
+      const gameSelector = $('#game-selector');
       gameSelect.empty();
+      gameSelector.empty();
+
+      // 游戏图标和描述映射
+      const gameInfo = {
+        'ccb': { icon: '⚔️', name: 'CCB战棋', desc: '策略战棋对战' },
+        'roulette': { icon: '🎲', name: '轮盘赌', desc: '运气挑战游戏' }
+      };
 
       (response.games || []).forEach(game => {
+        // 保留原有的select选项（隐藏但保持功能）
         gameSelect.append(`<option value="${game.id}">${game.name}</option>`);
+        
+        // 创建游戏卡片
+        const info = gameInfo[game.id] || { icon: '🎮', name: game.name, desc: '精彩游戏' };
+        const gameCard = $(`
+          <div class="game-card" data-game-id="${game.id}">
+            <div class="game-icon">${info.icon}</div>
+            <div class="game-name">${info.name}</div>
+            <div class="game-desc">${info.desc}</div>
+          </div>
+        `);
+        
+        // 点击卡片选择游戏
+        gameCard.click(function() {
+          // 移除其他卡片的选中状态
+          $('.game-card').removeClass('selected');
+          // 添加当前卡片的选中状态
+          $(this).addClass('selected');
+          // 同步更新隐藏的select
+          gameSelect.val(game.id);
+        });
+        
+        gameSelector.append(gameCard);
       });
     },
     error: () => {

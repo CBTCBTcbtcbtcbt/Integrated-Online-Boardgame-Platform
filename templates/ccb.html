@@ -10,67 +10,223 @@
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* 面板通用样式 */
-        .panel {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        /* 战棋风格背景 */
+        body {
+            margin: 0;
             padding: 20px;
-            background: white;
-            border: 1px solid #ccc;
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 50%, #3d2415 100%);
+            min-height: 100vh;
+            font-family: 'Georgia', 'Microsoft YaHei', serif;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(160, 82, 45, 0.1) 0%, transparent 50%);
+        }
+        
+        /* 战棋风格装饰边框 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 3px solid #8b4513;
+            border-image: linear-gradient(45deg, #8b4513, #cd853f, #8b4513) 1;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* 游戏界面容器 */
+        #game {
+            position: relative;
+            z-index: 1;
+            background: rgba(60, 40, 30, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #8b4513;
+            box-shadow: 0 0 30px rgba(139, 69, 19, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        #game h2 {
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-align: center;
+            letter-spacing: 3px;
+            border-bottom: 2px solid #8b4513;
+            padding-bottom: 10px;
+        }
+        
+        /* 回合信息样式 */
+        #turnInfo {
+            background: rgba(139, 69, 19, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #8b4513;
+            margin-bottom: 15px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        #cmdInfo, #msg {
+            color: #f4a460;
+            font-size: 14px;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            z-index: 1000;
+            border-left: 3px solid #cd853f;
         }
         
-        /* 房间大厅样式 */
-        #room-hall {
-            width: 600px;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-        
-        /* 房间面板样式 */
-        #room-panel {
-            width: 500px;
-        }
-        
-        /* 按钮通用样式 */
+        /* 按钮样式 - 战棋风格 */
         button {
-            padding: 5px 10px;
+            padding: 12px 24px;
             margin: 5px;
             cursor: pointer;
-        }
-        
-        /* 输入框样式 */
-        input, select {
-            padding: 5px;
-            margin: 5px 0;
-            width: 200px;
-        }
-        
-        /* 房间项样式 */
-        .room-item {
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            color: #ffd700;
+            border: 2px solid #cd853f;
             border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Georgia', serif;
+        }
+        
+        button:hover {
+            background: linear-gradient(135deg, #a0522d 0%, #cd853f 100%);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            border-color: #ffd700;
+        }
+        
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 选择框样式 */
+        select {
+            padding: 10px;
+            margin: 5px;
+            background: rgba(139, 69, 19, 0.5);
+            border: 2px solid #8b4513;
+            border-radius: 5px;
+            color: #ffd700;
+            font-size: 14px;
+            font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Georgia', serif;
         }
         
-        .room-item:hover {
-            background-color: #f0f0f0;
+        select:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            background: rgba(139, 69, 19, 0.7);
         }
         
-        /* 消息样式 */
-        .message {
-            color: red;
-            margin: 10px 0;
+        select option {
+            background: #3c281e;
+            color: #ffd700;
         }
         
-        .success-message {
-            color: green;
+        /* 棋盘样式 - 战棋风格 */
+        #board {
+            border-collapse: collapse;
+            margin: 20px auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            border: 3px solid #8b4513;
+            background: #2c1810;
+        }
+        
+        #board td {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #5d4037;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            position: relative;
+            background: linear-gradient(135deg, #3e2723 0%, #4e342e 100%);
+        }
+        
+        #board td:hover {
+            box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.3);
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        
+        /* 不同玩家背景色 - 战棋风格 */
+        .p4 { 
+            background: linear-gradient(135deg, #5c7cfa 0%, #4263eb 100%);
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+        .p1 { 
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+        .p3 { 
+            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+            color: #000;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+        }
+        .p2 { 
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+        .pp4 { 
+            background: linear-gradient(135deg, #364fc7 0%, #1c7ed6 100%);
+            color: #fff;
+            border: 2px solid #ffd700;
+        }
+        .pp1 { 
+            background: linear-gradient(135deg, #c92a2a 0%, #a61e4d 100%);
+            color: #fff;
+            border: 2px solid #ffd700;
+        }
+        .pp3 { 
+            background: linear-gradient(135deg, #e67700 0%, #d9480f 100%);
+            color: #fff;
+            border: 2px solid #ffd700;
+        }
+        .pp2 { 
+            background: linear-gradient(135deg, #2b8a3e 0%, #087f5b 100%);
+            color: #fff;
+            border: 2px solid #ffd700;
+        }
+        .p-1 { 
+            background: linear-gradient(135deg, #212529 0%, #343a40 100%);
+            color: #adb5bd;
+        }
+        .p-2 { 
+            background: linear-gradient(135deg, #868e96 0%, #adb5bd 100%);
+            color: #212529;
+        }
+        
+        /* 控制面板 */
+        #infoBar {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(139, 69, 19, 0.3);
+            border-radius: 5px;
+            border: 1px solid #8b4513;
         }
     </style>
 </head>
@@ -78,18 +234,18 @@
 
 <!-- 游戏界面 -->
 <div id="game" >
-    <h2>游戏中 - <span id="current-game-name"></span></h2>
+    <h2>⚔ 战棋对决 - <span id="current-game-name"></span> ⚔</h2>
     <div id="turnInfo"></div>
     <p id="cmdInfo"></p>
     <!-- 玩家选择的单位类型 -->
     <select id="selPiece">
-        <option value="1">步兵1k</option>
-        <option value="2">坦克2k</option>
-        <option value="3">轰炸机3k</option>
-        <option value="4">战斗机3k</option>
-        <option value="5">城市2k</option>
-        <option value="6">核弹3k（发射井6k）</option>
-        <option value="7">指挥所2k</option>
+        <option value="1">⚔ 步兵1k</option>
+        <option value="2">🛡 坦克2k</option>
+        <option value="3">✈ 轰炸机3k</option>
+        <option value="4">🦅 战斗机3k</option>
+        <option value="5">🏰 城市2k</option>
+        <option value="6">☢ 核弹3k（发射井6k）</option>
+        <option value="7">🎯 指挥所2k</option>
     </select>
     <button id="btnSkip">跳过回合</button>
     <button id="exit-game-btn">退出游戏</button>
