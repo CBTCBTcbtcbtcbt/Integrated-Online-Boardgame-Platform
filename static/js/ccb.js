@@ -185,7 +185,7 @@ function renderBoard(board) {
   // 当前玩家的可见范围（若服务器有返回）
   const currentPlayer = players && account ? players[account] : null;
   const visibleRange = currentPlayer ? currentPlayer[7] : null; // 第8个元素是可见范围
-
+  console.log('Visible range for current player:', visibleRange);
   for (let i = 0; i < board.length; i++) {
     const tr = document.createElement('tr');
     for (let j = 0; j < board[i].length; j++) {
@@ -202,7 +202,7 @@ function renderBoard(board) {
       }
 
       const isVisible = visibleRange && Array.isArray(visibleRange[i]) && visibleRange[i][j] === 1;
-
+      console.log(`Cell [${i}, ${j}] visibility:`, isVisible);
       if (!isVisible) {
         // 不可见的格子显示为灰色
         td.innerText = '';
@@ -262,7 +262,3 @@ function renderTurn(turn, pls) {
     cmdInfo.innerText = ` 指挥点：${pls && account && pls[account] ? (pls[account][2] || 0) : 0}`;
   }
 }
-
-// ================================
-// 辅助函数：加载房间 / 游戏列表
-// ================================
