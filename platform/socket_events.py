@@ -8,7 +8,7 @@ from flask import request
 from platform.auth import get_user
 
 # 存储token到Socket会话ID的映射（用于向特定用户发送消息）
-token_to_sid = {}  # 键: token, 值: socket session id
+account_to_sid = {}  # 键: token, 值: socket session id
 # 存储Socket会话ID到token的映射
 sid_to_token = {}  # 键: socket session id, 值: token
 
@@ -46,7 +46,7 @@ def init_socket_events(socketio, room_manager):
             account = verify_token(token)
             if account:
                 sid = request.sid
-                token_to_sid[token] = sid
+                account_to_sid[account] = sid
                 sid_to_token[sid] = token
                 print(f"用户通过token连接成功: account={account}, sid={sid}")
                 return True
@@ -55,6 +55,77 @@ def init_socket_events(socketio, room_manager):
         print(f"Socket连接: sid={request.sid}, 未提供有效token")
         return True
     
+    # 重新连接事件
+    @socketio.on('token_reconnect')
+    def handle_token_reconnect(data):
+        """
+        处理Socket重新连接事件，验证token并刷新游戏状态
+        
+        参数：
+        - data: 包含认证信息的字典，包含token字段
+        
+        功能流程：
+        1. 从data中获取token
+        2. 验证token是否有效
+        3. 如果有效，建立token与sid的映射
+        4. 检查用户是否在房间中且游戏已开始
+        5. 如果游戏已开始，获取当前游戏状态并发送刷新
+        6. 如果无效，发送错误响应
+        """
+
+        print(f"Socket重新连接请求: sid={request.sid}, data={data}")
+        token = data.get('token')
+        print(f"token = {token}")
+        if token:
+            account = verify_token(token)
+            if account:
+                print(f"用户通过token重新连接请求: account={account}, sid={request.sid}")
+                sid = request.sid
+                account_to_sid[account] = sid
+                sid_to_token[sid] = token
+                print(f"用户通过token重新连接成功: account={account}, sid={sid}")
+                
+                # 获取用户房间信息
+                user_info = get_user(account)
+                room_id = user_info.get('room') if user_info else None
+                
+                if room_id:
+                    print(f"用户 {account} 重新连接后加入房间: {room_id}")
+                    join_room(room_id)
+                    
+                    room = room_manager.get_room(room_id)
+                    if room and room.game_started:
+                        print(f"用户 {account} 重新连接后游戏已开始，获取游戏状态")
+                        
+                        # 调用游戏算法库获取当前游戏状态
+                        game_state = room_manager.get_game_state(room_id)
+                        
+                        # 发送重连成功响应，包含游戏状态用于刷新页面
+                        emit('reconnect_response', {
+                            'ok': True,
+                            'msg': '重新连接成功',
+                            'account': account,
+                            'room_id': room_id,
+                            'game_state': game_state,
+                            'game_id': room.selected_game
+                        },room=account_to_sid[account])
+                        return
+                
+                # 用户不在游戏中，返回基本重连成功信息
+                emit('reconnect_response', {
+                    'ok': True,
+                    'msg': '重新连接成功',
+                    'account': account,
+                    'room_id': room_id
+                })
+                return
+        
+        # Token无效或不存在，发送错误响应
+        print(f"Socket重新连接失败: sid={request.sid}, 无效token")
+        emit('reconnect_response', {
+            'ok': False,
+            'msg': '无效的token，重新连接失败'
+        })
     # 登录事件
     @socketio.on('login')
     def handle_login(data):
@@ -88,7 +159,7 @@ def init_socket_events(socketio, room_manager):
             # 登录成功，保存token与sid的映射
             token = result['token']
             sid = request.sid
-            #token_to_sid[token] = sid
+            #account_to_sid[account] = sid
             sid_to_token[sid] = token
             
             print(f"用户 {account} 登录成功，token已生成")

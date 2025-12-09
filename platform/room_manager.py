@@ -273,6 +273,25 @@ class RoomManager:
             return room.game_instance.handle_event(account, data)
         return {'ok': False, 'msg': '游戏未开始'}
     
+    def handle_return(self, room_id, account):
+        """
+        处理游戏事件
+        
+        Args:
+            room_id: 房间ID
+            account: 玩家账号
+            data: 事件数据
+        
+        Returns:
+            dict: 事件处理结果
+        """
+        print("room_manager:",room_id, account)
+        room = self.get_room(room_id)
+        print(room.game_instance)
+        if room and room.game_instance:
+            return room.game_instance.handle_return(account)
+        return {'ok': False, 'msg': '游戏未开始'}
+
     def get_game_state(self, room_id):
         """
         获取游戏状态
