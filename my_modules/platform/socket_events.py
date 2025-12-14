@@ -3,9 +3,9 @@
 # 作为前端和后端服务之间的实时通信桥梁
 
 from flask_socketio import emit, join_room, leave_room  # Socket.IO功能，用于发送事件和房间管理
-from platform.auth import login_user, update_user_room, verify_token  # 导入认证相关功能
+from my_modules.platform.auth import login_user, update_user_room, verify_token  # 导入认证相关功能
 from flask import request
-from platform.auth import get_user
+from my_modules.platform.auth import get_user
 
 # 存储token到Socket会话ID的映射（用于向特定用户发送消息）
 account_to_sid = {}  # 键: token, 值: socket session id

@@ -1,6 +1,6 @@
 # 房间管理器
 
-from games.game_registry import game_registry
+from my_modules.games.game_registry import game_registry
 
 class Room:
     """
