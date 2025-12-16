@@ -10,67 +10,281 @@
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* 面板通用样式 */
+        /* 科技风格背景 */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 科技网格背景 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* 面板通用样式 - 科技风格 */
         .panel {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            padding: 20px;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 40px;
+            background: rgba(10, 15, 35, 0.98);
+            border: 3px solid #00ffff;
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), inset 0 0 30px rgba(0, 255, 255, 0.08);
             z-index: 1000;
+            backdrop-filter: blur(15px);
+        }
+        
+        .panel h2 {
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.4);
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-align: center;
+            letter-spacing: 3px;
+            font-weight: 600;
         }
         
         /* 房间大厅样式 */
         #room-hall {
-            width: 600px;
-            max-height: 70vh;
+            width: 650px;
+            max-height: 75vh;
             overflow-y: auto;
         }
         
         /* 房间面板样式 */
         #room-panel {
-            width: 500px;
+            width: 550px;
         }
         
-        /* 按钮通用样式 */
+        /* 登录和其他小面板 */
+        #login-panel, #create-room-panel, #join-room-panel {
+            width: 450px;
+        }
+        
+        /* 按钮通用样式 - 科技风格 */
         button {
-            padding: 5px 10px;
-            margin: 5px;
+            padding: 12px 28px;
+            margin: 8px;
             cursor: pointer;
+            background: linear-gradient(135deg, #00ffff 0%, #0088ff 100%);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
         }
         
-        /* 输入框样式 */
+        button:hover {
+            background: linear-gradient(135deg, #00ffff 0%, #00ccff 100%);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7), 0 6px 12px rgba(0, 0, 0, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        /* 输入框样式 - 科技风格 */
         input, select {
-            padding: 5px;
-            margin: 5px 0;
-            width: 200px;
+            padding: 12px 15px;
+            margin: 12px 0;
+            width: 100%;
+            max-width: 350px;
+            background: rgba(0, 255, 255, 0.08);
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            color: #00ffff;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-weight: 500;
         }
         
-        /* 房间项样式 */
-        .room-item {
-            padding: 10px;
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            background: rgba(0, 255, 255, 0.15);
+        }
+        
+        input::placeholder {
+            color: rgba(0, 255, 255, 0.6);
+        }
+        
+        /* 标签样式 */
+        .panel label {
+            color: #00ffff;
+            font-size: 16px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+        
+        .panel p {
+            color: #00ffff;
+            font-size: 16px;
+            line-height: 1.8;
             margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        }
+        
+        .panel span {
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+        }
+        
+        /* 房间项样式 - 科技风格 */
+        .room-item {
+            padding: 18px;
+            margin: 12px 0;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
             cursor: pointer;
+            background: rgba(0, 255, 255, 0.08);
+            transition: all 0.3s;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 500;
         }
         
         .room-item:hover {
-            background-color: #f0f0f0;
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            transform: translateX(8px);
+            border-color: #00ffff;
         }
         
         /* 消息样式 */
         .message {
-            color: red;
-            margin: 10px 0;
+            color: #ff6b6b;
+            margin: 15px 0;
+            text-shadow: 0 0 8px rgba(255, 107, 107, 0.8);
+            font-size: 15px;
+            font-weight: 600;
         }
         
         .success-message {
-            color: green;
+            color: #51cf66;
+            text-shadow: 0 0 8px rgba(81, 207, 102, 0.8);
+        }
+        
+        /* 玩家列表样式 */
+        #current-room-players {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        
+        #current-room-players li {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: rgba(0, 255, 255, 0.12);
+            border-left: 4px solid #00ffff;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        #current-room-players li:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #00ffff;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ccff;
+        }
+        
+        /* 游戏选择方块样式 */
+        .game-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .game-card {
+            padding: 25px 20px;
+            background: rgba(0, 255, 255, 0.08);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            position: relative;
+        }
+        
+        .game-card:hover {
+            background: rgba(0, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            transform: translateY(-5px);
+        }
+        
+        .game-card.selected {
+            background: rgba(0, 255, 255, 0.25);
+            border-color: #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.7), inset 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+        
+        .game-card .game-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .game-card .game-name {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+        }
+        
+        .game-card .game-desc {
+            color: #00ffff;
+            font-size: 13px;
+            margin-top: 8px;
+            opacity: 0.8;
+        }
+        
+        /* 隐藏原来的select */
+        #game-select {
+            display: none;
         }
     </style>
 </head>
@@ -78,46 +292,67 @@
 
 <!-- 登录面板 -->
 <div id="login-panel" class="panel">
-    <h2>登录</h2>
-    账号: <input id="login-account"><br>
-    密码: <input id="login-password" type="password"><br>
-    <button id="login-btn">登录</button>
-    <button id="show-register-btn">注册</button>
+    <h2>◢ 系统登录 ◣</h2>
+    <div style="margin: 20px 0;">
+        <label>账号</label>
+        <input id="login-account" placeholder="请输入账号">
+    </div>
+    <div style="margin: 20px 0;">
+        <label>密码</label>
+        <input id="login-password" type="password" placeholder="请输入密码">
+    </div>
+    <div style="text-align: center; margin-top: 25px;">
+        <button id="login-btn">登录</button>
+        <button id="show-register-btn">注册</button>
+    </div>
     <p id="login-message" class="message"></p>
 </div>
 
 <!-- 创建房间面板 -->
 <div id="create-room-panel" class="panel" style="display:none;">
-    <h2>创建房间</h2>
-    房间ID: <input id="create-room-id"><br>
-    <button id="create-room-submit-btn">创建</button>
-    <button id="cancel-create-room-btn">取消</button>
+    <h2>◢ 创建房间 ◣</h2>
+    <div style="margin: 20px 0;">
+        <label>房间ID</label>
+        <input id="create-room-id" placeholder="请输入房间ID">
+    </div>
+    <div style="text-align: center; margin-top: 25px;">
+        <button id="create-room-submit-btn">创建</button>
+        <button id="cancel-create-room-btn">取消</button>
+    </div>
     <p id="create-room-message" class="message"></p>
 </div>
 
 <!-- 加入房间面板 -->
 <div id="join-room-panel" class="panel" style="display:none;">
-    <h2>加入房间</h2>
-    房间号: <input id="join-room-id"><br>
-    <button id="join-room-btn">加入</button>
-    <button id="cancel-join-room-btn">取消</button>
+    <h2>◢ 加入房间 ◣</h2>
+    <div style="margin: 20px 0;">
+        <label>房间号</label>
+        <input id="join-room-id" placeholder="请输入房间号">
+    </div>
+    <div style="text-align: center; margin-top: 25px;">
+        <button id="join-room-btn">加入</button>
+        <button id="cancel-join-room-btn">取消</button>
+    </div>
     <p id="join-room-message" class="message"></p>
 </div>
 
 <!-- 房间面板 -->
 <div id="room-panel" class="panel" style="display:none;">
-    <h2>房间信息</h2>
-    <div>
-        <p>房间ID: <span id="current-room-id"></span></p>
-        <p>房主: <span id="current-room-host"></span></p>
-        <p>玩家列表:</p>
+    <h2>◢ 房间信息 ◣</h2>
+    <div style="margin: 20px 0;">
+        <p><strong>房间ID:</strong> <span id="current-room-id"></span></p>
+        <p><strong>房主:</strong> <span id="current-room-host"></span></p>
+        <p style="margin-top: 20px;"><strong>玩家列表:</strong></p>
         <ul id="current-room-players"></ul>
     </div>
-    <div>
-        <p>选择游戏:</p>
+    <div style="margin: 25px 0;">
+        <label>选择游戏</label>
         <select id="game-select"></select>
+        <div class="game-selector" id="game-selector">
+            <!-- 游戏卡片将通过JavaScript动态生成 -->
+        </div>
     </div>
-    <div>
+    <div style="text-align: center; margin-top: 25px;">
         <button id="select-game-btn">确认选择</button>
         <button id="start-game-btn">开始游戏</button>
         <button id="leave-room-btn">离开房间</button>
@@ -148,15 +383,15 @@
 
 <!-- 房间大厅 -->
 <div id="room-hall" class="panel" style="display:none;">
-    <h2>房间大厅</h2>
-    <p>当前账号: <span id="current-account"></span></p>
-    <div>
+    <h2>◢ 房间大厅 ◣</h2>
+    <p style="font-size: 17px; margin: 20px 0;"><strong>当前账号:</strong> <span id="current-account"></span></p>
+    <div style="text-align: center; margin: 25px 0;">
         <button id="create-room-btn">创建房间</button>
         <button id="join-existing-room-btn">加入已有房间</button>
         <button id="logout-btn">退出登录</button>
     </div>
-    <div>
-        <h3>可用房间</h3>
+    <div style="margin-top: 30px;">
+        <h3 style="color: #00ffff; text-shadow: 0 0 15px rgba(0, 255, 255, 0.8); font-size: 20px; margin-bottom: 15px;">可用房间</h3>
         <div id="room-list">
             <!-- 房间列表将通过JavaScript动态生成 -->
         </div>

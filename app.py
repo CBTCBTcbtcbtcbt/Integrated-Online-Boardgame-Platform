@@ -31,10 +31,10 @@ import json
 import os
 
 # 导入平台模块
-from platform.auth import init_users, register_user, login_user, update_user_room
-from platform.socket_events import init_socket_events
-from platform.room_manager import RoomManager
-from games.game_registry import game_registry
+from my_modules.platform.auth import init_users, register_user, login_user, update_user_room
+from my_modules.platform.socket_events import init_socket_events
+from my_modules.platform.room_manager import RoomManager
+from my_modules.games.game_registry import game_registry
 
 # 初始化Flask应用
 app = Flask(__name__)

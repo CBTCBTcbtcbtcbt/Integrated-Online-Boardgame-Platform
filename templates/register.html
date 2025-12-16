@@ -6,49 +6,157 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <style>
-        /* 面板通用样式 */
+        /* 科技风格背景 */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 科技网格背景 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* 面板通用样式 - 科技风格 */
         .panel {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            padding: 20px;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 40px;
+            background: rgba(10, 15, 35, 0.98);
+            border: 3px solid #00ffff;
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), inset 0 0 30px rgba(0, 255, 255, 0.08);
             z-index: 1000;
+            backdrop-filter: blur(15px);
+            width: 450px;
         }
         
+        .panel h2 {
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.4);
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-align: center;
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
         
-        /* 按钮通用样式 */
+        /* 按钮通用样式 - 科技风格 */
         button {
-            padding: 5px 10px;
-            margin: 5px;
+            padding: 12px 28px;
+            margin: 8px;
             cursor: pointer;
+            background: linear-gradient(135deg, #00ffff 0%, #0088ff 100%);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
         }
         
-        /* 输入框样式 */
-        input, select {
-            padding: 5px;
-            margin: 5px 0;
-            width: 200px;
+        button:hover {
+            background: linear-gradient(135deg, #00ffff 0%, #00ccff 100%);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7), 0 6px 12px rgba(0, 0, 0, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        /* 输入框样式 - 科技风格 */
+        input {
+            padding: 12px 15px;
+            margin: 12px 0;
+            width: 100%;
+            max-width: 350px;
+            background: rgba(0, 255, 255, 0.08);
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            color: #00ffff;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            background: rgba(0, 255, 255, 0.15);
+        }
+        
+        input::placeholder {
+            color: rgba(0, 255, 255, 0.6);
+        }
+        
+        /* 标签样式 */
+        .panel label {
+            color: #00ffff;
+            font-size: 16px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+        
+        /* 消息样式 */
+        .message {
+            color: #ff6b6b;
+            margin: 15px 0;
+            text-shadow: 0 0 8px rgba(255, 107, 107, 0.8);
+            font-size: 15px;
+            font-weight: 600;
         }
         
         .success-message {
-            color: green;
+            color: #51cf66;
+            text-shadow: 0 0 8px rgba(81, 207, 102, 0.8);
         }
     </style>
 </head>
 <body>
   <!-- 注册面板 -->
   <div id="register-panel" class="panel" style="display: ''">
-      <h2>注册</h2>
-      账号: <input id="register-account"><br>
-      游戏ID: <input id="register-id"><br>
-      密码: <input id="register-password" type="password"><br>
-      <button id="register-submit-btn">注册</button>
-      <button id="back-to-login-btn">返回登录</button>
+      <h2>◢ 注册账号 ◣</h2>
+      <div style="margin: 20px 0;">
+          <label>账号</label>
+          <input id="register-account" placeholder="请输入账号">
+      </div>
+      <div style="margin: 20px 0;">
+          <label>游戏ID</label>
+          <input id="register-id" placeholder="请输入游戏ID">
+      </div>
+      <div style="margin: 20px 0;">
+          <label>密码</label>
+          <input id="register-password" type="password" placeholder="请输入密码">
+      </div>
+      <div style="text-align: center; margin-top: 25px;">
+          <button id="register-submit-btn">注册</button>
+          <button id="back-to-login-btn">返回登录</button>
+      </div>
       <p id="register-message" class="message"></p>
   </div>
   <script src="{{ url_for('static', filename='js/register.js') }}"></script>

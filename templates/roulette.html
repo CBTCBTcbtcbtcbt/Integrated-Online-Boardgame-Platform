@@ -11,39 +11,97 @@
             box-sizing: border-box;
         }
         
+        /* 骗子酒馆风格背景 */
         body {
-            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Georgia', 'Microsoft YaHei', serif;
+            background: linear-gradient(135deg, #1a0f0a 0%, #2d1810 50%, #1f1108 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 木纹背景效果 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(90deg, rgba(101, 67, 33, 0.1) 0px, transparent 2px, transparent 4px, rgba(101, 67, 33, 0.1) 6px),
+                repeating-linear-gradient(0deg, rgba(139, 90, 43, 0.05) 0px, transparent 1px, transparent 2px, rgba(139, 90, 43, 0.05) 3px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* 酒馆氛围光效 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 140, 0, 0.1) 0%, transparent 50%);
+            animation: flicker 3s infinite alternate;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.5; }
         }
         
         .container {
-            background: white;
+            background: linear-gradient(135deg, #3d2817 0%, #2a1810 100%);
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 140, 0, 0.1);
             width: 100%;
             max-width: 800px;
             text-align: center;
+            border: 3px solid #654321;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 装饰性边框 */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            border-radius: 10px;
+            pointer-events: none;
         }
         
         h1 {
-            color: #667eea;
+            color: #ff8c00;
             margin-bottom: 20px;
             font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 140, 0, 0.5);
+            font-family: 'Georgia', serif;
+            letter-spacing: 2px;
         }
         
         .game-info {
-            background: #f5f5f5;
+            background: rgba(0, 0, 0, 0.4);
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 30px;
-            color: #666;
+            color: #d4a574;
             font-size: 14px;
+            border: 1px solid #654321;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
         }
         
         #cards-container {
@@ -58,7 +116,7 @@
         
         .card {
             aspect-ratio: 1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #654321 0%, #4a2f1a 100%);
             border-radius: 15px;
             display: flex;
             justify-content: center;
@@ -66,33 +124,57 @@
             font-size: 48px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 140, 0, 0.1);
             user-select: none;
+            border: 2px solid #8b5a2b;
+            position: relative;
+        }
+        
+        /* 卡牌木纹效果 */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(90deg, rgba(139, 90, 43, 0.1) 0px, transparent 2px, transparent 4px, rgba(139, 90, 43, 0.1) 6px);
+            border-radius: 15px;
+            pointer-events: none;
         }
         
         .card.hidden {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #654321 0%, #4a2f1a 100%);
+            color: #ff8c00;
+            text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
         }
         
         .card.hidden:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 140, 0, 0.4), inset 0 0 30px rgba(255, 140, 0, 0.2);
+            border-color: #ff8c00;
         }
         
+        /* 空弹 - 改进的图标 */
         .card.safe {
-            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
-            color: white;
+            background: linear-gradient(135deg, #2d5016 0%, #1a3d0a 100%);
+            color: #7cfc00;
             cursor: default;
             animation: flipIn 0.5s;
+            border-color: #4a7c2f;
+            font-size: 64px;
         }
         
+        /* 实弹 - 改进的图标 */
         .card.bomb {
-            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-            color: white;
+            background: linear-gradient(135deg, #8b0000 0%, #5a0000 100%);
+            color: #ff4500;
             cursor: default;
             animation: explode 0.5s;
+            border-color: #ff0000;
+            font-size: 64px;
         }
+        
         
         @keyframes flipIn {
             0% {
@@ -109,6 +191,7 @@
             }
             50% {
                 transform: scale(1.2);
+                box-shadow: 0 0 30px rgba(255, 69, 0, 0.8);
             }
             100% {
                 transform: scale(1);
@@ -116,70 +199,164 @@
         }
         
         #message {
-            background: #f5f5f5;
+            background: rgba(0, 0, 0, 0.5);
             padding: 20px;
             border-radius: 8px;
             min-height: 60px;
-            color: #333;
+            color: #ff8c00;
             font-size: 18px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            border: 1px solid #654321;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
         button {
             padding: 15px 40px;
-            background: #667eea;
-            color: white;
-            border: none;
+            background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
+            color: #ffd700;
+            border: 2px solid #ff8c00;
             border-radius: 8px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            font-family: 'Georgia', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         button:hover {
-            background: #5568d3;
+            background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%);
+            box-shadow: 0 6px 15px rgba(255, 140, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            border-color: #ffd700;
         }
         
         button:active {
-            transform: scale(0.98);
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
         
         .status {
             margin-top: 20px;
-            color: #666;
+            color: #d4a574;
             font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
         .status.connected {
-            color: #4caf50;
+            color: #7cfc00;
         }
         
         .status.disconnected {
-            color: #f44336;
+            color: #ff4500;
+        }
+        
+        /* 确认对话框样式 */
+        .confirm-dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .confirm-dialog.show {
+            display: flex;
+        }
+        
+        .confirm-content {
+            background: linear-gradient(135deg, #3d2817 0%, #2a1810 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 3px solid #654321;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .confirm-content h3 {
+            color: #ff8c00;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        .confirm-content p {
+            color: #d4a574;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+        
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .confirm-buttons button {
+            padding: 12px 30px;
+            font-size: 16px;
+        }
+        
+        .btn-confirm {
+            background: linear-gradient(135deg, #8b0000 0%, #5a0000 100%);
+            border-color: #ff0000;
+        }
+        
+        .btn-confirm:hover {
+            background: linear-gradient(135deg, #a00000 0%, #8b0000 100%);
+        }
+        
+        .btn-cancel {
+            background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);
+            border-color: #666;
+        }
+        
+        .btn-cancel:hover {
+            background: linear-gradient(135deg, #5a5a5a 0%, #4a4a4a 100%);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎰 轮盘赌游戏</h1>
+        <h1>🎲 骗子的轮盘 🎲</h1>
         
         <div class="game-info">
-            <p>游戏规则：6张卡牌中有1张爆炸💥，5张安全✓</p>
-            <p>点击卡牌翻开，翻到爆炸游戏结束！</p>
+            <p>游戏规则：6发子弹中有1发实弹●，5发空弹○</p>
+            <p>点击翻开子弹，翻到实弹游戏结束！</p>
         </div>
         
         <div id="cards-container"></div>
         
-        <div id="message">点击卡牌开始游戏！</div>
+        <div id="message">点击子弹开始游戏！</div>
         
-        <button id="resetBtn">🔄 重置游戏</button>
+        <button id="resetBtn">🔄 重新装填</button>
         
-        <div class="status" id="status">连接状态: 未连接</div>
+        <div class="status" id="status" style="display: none;">连接状态: 未连接</div>
+    </div>
+    
+    <!-- 确认对话框 -->
+    <div id="confirmDialog" class="confirm-dialog">
+        <div class="confirm-content">
+            <h3>⚠ 确认操作</h3>
+            <p id="confirmMessage">确定要执行此操作吗？</p>
+            <div class="confirm-buttons">
+                <button id="confirmYes" class="btn-confirm">确认</button>
+                <button id="confirmNo" class="btn-cancel">取消</button>
+            </div>
+        </div>
     </div>
     
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>

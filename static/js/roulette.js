@@ -29,6 +29,46 @@ socket.on('disconnect', () => {
     messageElement.textContent = '连接已断开，请刷新页面重新连接...';
 });
 
+// 确认对话框相关
+const confirmDialog = document.getElementById('confirmDialog');
+const confirmMessage = document.getElementById('confirmMessage');
+const confirmYes = document.getElementById('confirmYes');
+const confirmNo = document.getElementById('confirmNo');
+let pendingAction = null;
+
+// 显示确认对话框
+function showConfirm(message, callback) {
+    confirmMessage.textContent = message;
+    pendingAction = callback;
+    confirmDialog.classList.add('show');
+}
+
+// 隐藏确认对话框
+function hideConfirm() {
+    confirmDialog.classList.remove('show');
+    pendingAction = null;
+}
+
+// 确认按钮事件
+confirmYes.addEventListener('click', () => {
+    if (pendingAction) {
+        pendingAction();
+    }
+    hideConfirm();
+});
+
+// 取消按钮事件
+confirmNo.addEventListener('click', () => {
+    hideConfirm();
+});
+
+// 点击对话框外部关闭
+confirmDialog.addEventListener('click', (e) => {
+    if (e.target === confirmDialog) {
+        hideConfirm();
+    }
+});
+
 // 翻牌函数
 function flipCard(index) {
     if (gameState.gameOver) {
@@ -41,29 +81,35 @@ function flipCard(index) {
         return;
     }
     
-    // 发送翻牌事件到后端
-    const eventData = {
-        token: token,
-        event_name: 'flip_card',
-        event_data: {
-            index: index
-        }
-    };
-    
-    console.log('发送翻牌事件:', eventData);
-    socket.emit('game_event', eventData);
+    // 显示确认对话框
+    showConfirm('确定要翻开这发子弹吗？', () => {
+        // 发送翻牌事件到后端
+        const eventData = {
+            token: token,
+            event_name: 'flip_card',
+            event_data: {
+                index: index
+            }
+        };
+        
+        console.log('发送翻牌事件:', eventData);
+        socket.emit('game_event', eventData);
+    });
 }
 
 // 重置游戏
 function resetGame() {
-    const eventData = {
-        token: token,
-        event_name: 'reset',
-        event_data: {}
-    };
-    
-    console.log('发送重置事件:', eventData);
-    socket.emit('game_event', eventData);
+    // 显示确认对话框
+    showConfirm('确定要重新装填子弹吗？', () => {
+        const eventData = {
+            token: token,
+            event_name: 'reset',
+            event_data: {}
+        };
+        
+        console.log('发送重置事件:', eventData);
+        socket.emit('game_event', eventData);
+    });
 }
 
 // 监听游戏事件结果
