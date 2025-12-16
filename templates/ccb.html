@@ -161,7 +161,7 @@
             font-weight: bold;
             transition: all 0.2s;
             position: relative;
-            background: linear-gradient(135deg, #3e2723 0%, #4e342e 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #fbc691 100%); /* 默认改为白到沙子色 */
         }
         
         #board td:hover {
@@ -177,50 +177,39 @@
             cursor: not-allowed !important;
             position: relative;
         }
-/*             
-            .fog-cell::after {
-                content: '?';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                color: #666;
-                font-size: 18px;
-                font-weight: bold;
-            } */
-    
+        
         /* 海洋格子 - 不在地图上的区域 */
         .not-available-cell {
             background: #1f0d5a !important;
             cursor: not-allowed !important;
         }
         
-        /* 不同玩家背景色 - 战棋风格 */
+        /* 不同玩家背景色 - 战棋风格（变浅版） */
         .p1 { 
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
+            background: linear-gradient(135deg, #ff9999 0%, #ff7b7b 100%) !important; /* 浅红色 */
             color: #fff !important;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
         .p2 { 
-            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%) !important;
+            background: linear-gradient(135deg, #8ce99a 0%, #69db7c 100%) !important; /* 浅绿色 */
             color: #fff !important;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
         .p3 { 
-            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%) !important;
+            background: linear-gradient(135deg, #ffec99 0%, #ffe066 100%) !important; /* 浅黄色 */
             color: #000 !important;
             text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
         }
         
         .p4 { 
-            background: linear-gradient(135deg, #5c7cfa 0%, #4263eb 100%) !important;
+            background: linear-gradient(135deg, #9db4ff 0%, #748ffc 100%) !important; /* 浅蓝色 */
             color: #fff !important;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
-        /* 城市（油井）样式 - 带金色边框 */
+        /* 城市（油井）样式 - 带金色边框（保持原色不变） */
         .pp1 { 
             background: linear-gradient(135deg, #c92a2a 0%, #a61e4d 100%) !important;
             color: #fff !important;
@@ -249,10 +238,10 @@
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
         
-        /* 中立/空地样式 */
+        /* 中立/空地样式 - 白到沙子色渐变 */
         .p0 { 
-            background: linear-gradient(135deg, #3e2723 0%, #4e342e 100%);
-            color: #8b7355;
+            background: linear-gradient(135deg, #ffffff 0%, #fbc691 100%) !important;
+            color: #8b7355 !important;
         }
         
         .p-1 { 
@@ -261,8 +250,8 @@
         }
         
         .p-2 { 
-            background: linear-gradient(135deg, #868e96 0%, #adb5bd 100%);
-            color: #212529;
+            background: linear-gradient(135deg, #868e96 0%, #adb5bd 100%) !important;
+            color: #212529 !important;
         }
         
         /* 控制面板 */
@@ -284,13 +273,13 @@
     <p id="cmdInfo"></p>
     <!-- 玩家选择的单位类型 -->
     <select id="selPiece">
-        <option value="1">⚔ 步兵1k</option>
-        <option value="2">🛡 坦克2k</option>
-        <option value="3">✈ 轰炸机3k</option>
-        <option value="4">🦅 战斗机3k</option>
-        <option value="5">🏰 城市2k</option>
+        <option value="1">○ 步兵1k</option>
+        <option value="2">□ 坦克2k</option>
+        <option value="3">◇ 轰炸机3k</option>
+        <option value="4">△ 战斗机3k</option>
+        <option value="5">▣ 城市2k</option>
         <option value="6">☢ 核弹3k（发射井6k）</option>
-        <option value="7">🎯 指挥所2k</option>
+        <option value="7">☆ 指挥所2k</option>
     </select>
     <button id="btnSkip">跳过回合</button>
     <button id="exit-game-btn">退出游戏</button>
