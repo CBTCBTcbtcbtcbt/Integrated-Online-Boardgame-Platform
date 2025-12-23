@@ -219,9 +219,14 @@ function renderBoard(board) {
           td.className = 'not-available-cell';
           console.log('Cell not available:', i, j);
         }
-        if (owner !== 0 && owner !== -1) {
+        if (owner === -2) {
+          td.className = 'p-2';
+        }
+        if (owner !== 0 && owner !== -1 && owner !== -2) {
           td.className = 'p' + owner; // 根据玩家染色
         }
+        
+        
 
         switch (type) {
           case 1:

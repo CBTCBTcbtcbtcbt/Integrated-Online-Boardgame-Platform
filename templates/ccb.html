@@ -44,8 +44,8 @@
             background: rgba(60, 40, 30, 0.9);
             padding: 25px;
             border-radius: 10px;
-            border: 2px solid #8b4513;
-            box-shadow: 0 0 30px rgba(139, 69, 19, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.3);
+            border: 2px solid #858585;
+            box-shadow: 0 0 30px rgba(131, 131, 131, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.3);
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -57,16 +57,16 @@
             font-size: 28px;
             text-align: center;
             letter-spacing: 3px;
-            border-bottom: 2px solid #8b4513;
+            border-bottom: 2px solid #8b8b8b;
             padding-bottom: 10px;
         }
         
         /* 回合信息样式 */
         #turnInfo {
-            background: rgba(139, 69, 19, 0.3);
+            background: rgba(143, 143, 143, 0.3);
             padding: 15px;
             border-radius: 8px;
-            border: 2px solid #8b4513;
+            border: 2px solid #909090;
             margin-bottom: 15px;
             color: #ffd700;
             font-size: 16px;
@@ -76,13 +76,13 @@
         }
         
         #cmdInfo, #msg {
-            color: #f4a460;
+            color: #ededed;
             font-size: 14px;
             margin: 10px 0;
             padding: 10px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 5px;
-            border-left: 3px solid #cd853f;
+            border-left: 3px solid #cdcdcd;
         }
         
         /* 按钮样式 - 战棋风格 */
@@ -90,9 +90,9 @@
             padding: 12px 24px;
             margin: 5px;
             cursor: pointer;
-            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            background: linear-gradient(135deg, #939393 0%, #9b9b9b 100%);
             color: #ffd700;
-            border: 2px solid #cd853f;
+            border: 2px solid #ffd700;
             border-radius: 5px;
             font-weight: bold;
             font-size: 14px;
@@ -104,7 +104,7 @@
         }
         
         button:hover {
-            background: linear-gradient(135deg, #a0522d 0%, #cd853f 100%);
+            background: linear-gradient(135deg, #a3a3a3 0%, #cecece 100%);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
             border-color: #ffd700;
@@ -119,8 +119,8 @@
         select {
             padding: 10px;
             margin: 5px;
-            background: rgba(139, 69, 19, 0.5);
-            border: 2px solid #8b4513;
+            background: rgba(145, 145, 145, 0.5);
+            border: 2px solid #8a8a8a;
             border-radius: 5px;
             color: #ffd700;
             font-size: 14px;
@@ -134,11 +134,11 @@
             outline: none;
             border-color: #ffd700;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            background: rgba(139, 69, 19, 0.7);
+            background: rgba(127, 127, 127, 0.7);
         }
         
         select option {
-            background: #3c281e;
+            background: #313131;
             color: #ffd700;
         }
         
@@ -147,21 +147,21 @@
             border-collapse: collapse;
             margin: 20px auto;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-            border: 3px solid #8b4513;
-            background: #2c1810;
+            border: 3px solid #5e5e5e;
+            background: #282828;
         }
         
         #board td {
             width: 35px;
             height: 35px;
-            border: 1px solid #5d4037;
+            border: 1px solid #5b5b5b;
             text-align: center;
             cursor: pointer;
             font-size: 12px;
             font-weight: bold;
             transition: all 0.2s;
             position: relative;
-            background: linear-gradient(135deg, #3e2723 0%, #4e342e 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #d8d8d8 100%); /* 默认改为白到沙子色 */
         }
         
         #board td:hover {
@@ -172,87 +172,72 @@
         
         /* 迷雾格子 - 不可见区域 */
         .fog-cell {
-            background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%) !important;
+            background: linear-gradient(135deg, #6b6a6a 0%, #4a4a4a 100%) !important;
             color: transparent !important;
             cursor: not-allowed !important;
             position: relative;
         }
-/*             
-            .fog-cell::after {
-                content: '?';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                color: #666;
-                font-size: 18px;
-                font-weight: bold;
-            } */
-    
+        
         /* 海洋格子 - 不在地图上的区域 */
         .not-available-cell {
             background: #1f0d5a !important;
             cursor: not-allowed !important;
         }
         
-        /* 不同玩家背景色 - 战棋风格 */
+        /* 不同玩家背景色 - 战棋风格（变浅版） */
         .p1 { 
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
+            background: linear-gradient(135deg, #ff9999 0%, #ff7b7b 100%) !important; /* 浅红色 */
             color: #fff !important;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
         .p2 { 
-            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%) !important;
+            background: linear-gradient(135deg, #8ce99a 0%, #69db7c 100%) !important; /* 浅绿色 */
             color: #fff !important;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
         .p3 { 
-            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%) !important;
-            color: #000 !important;
+            background: linear-gradient(135deg, #f5dc70 0%, #ffd322 100%) !important; /* 浅黄色 */
+            color: #ffffff !important;
             text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
         }
         
         .p4 { 
-            background: linear-gradient(135deg, #5c7cfa 0%, #4263eb 100%) !important;
+            background: linear-gradient(135deg, #9db4ff 0%, #748ffc 100%) !important; /* 浅蓝色 */
             color: #fff !important;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
-        /* 城市（油井）样式 - 带金色边框 */
+        /* 城市（油井）样式 - 带金色边框（保持原色不变） */
         .pp1 { 
             background: linear-gradient(135deg, #c92a2a 0%, #a61e4d 100%) !important;
             color: #fff !important;
-            border: 2px solid #ffd700 !important;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
         
         .pp2 { 
             background: linear-gradient(135deg, #2b8a3e 0%, #087f5b 100%) !important;
             color: #fff !important;
-            border: 2px solid #ffd700 !important;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
         
         .pp3 { 
-            background: linear-gradient(135deg, #e67700 0%, #d9480f 100%) !important;
+            background: linear-gradient(135deg, #f6dd61 0%, #b8a800 100%) !important;
             color: #fff !important;
-            border: 2px solid #ffd700 !important;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
         
         .pp4 { 
             background: linear-gradient(135deg, #364fc7 0%, #1c7ed6 100%) !important;
             color: #fff !important;
-            border: 2px solid #ffd700 !important;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
         
-        /* 中立/空地样式 */
+        /* 中立/空地样式 - 白到沙子色渐变 */
         .p0 { 
-            background: linear-gradient(135deg, #3e2723 0%, #4e342e 100%);
-            color: #8b7355;
+            background: linear-gradient(135deg, #ffffff 0%, #d8d8d8 100%) !important;
+            color: #8b7355 !important;
         }
         
         .p-1 { 
@@ -261,17 +246,17 @@
         }
         
         .p-2 { 
-            background: linear-gradient(135deg, #868e96 0%, #adb5bd 100%);
-            color: #212529;
+            background: linear-gradient(135deg, #868e96 0%, #adb5bd 100%) !important;
+            color: #212529 !important;
         }
         
         /* 控制面板 */
         #infoBar {
             margin-bottom: 15px;
             padding: 10px;
-            background: rgba(139, 69, 19, 0.3);
+            background: rgba(135, 135, 135, 0.3);
             border-radius: 5px;
-            border: 1px solid #8b4513;
+            border: 1px solid #868686;
         }
     </style>
 </head>
@@ -284,13 +269,13 @@
     <p id="cmdInfo"></p>
     <!-- 玩家选择的单位类型 -->
     <select id="selPiece">
-        <option value="1">⚔ 步兵1k</option>
-        <option value="2">🛡 坦克2k</option>
-        <option value="3">✈ 轰炸机3k</option>
-        <option value="4">🦅 战斗机3k</option>
-        <option value="5">🏰 城市2k</option>
+        <option value="1">○ 步兵1k</option>
+        <option value="2">▤ 坦克2k</option>
+        <option value="3">◇ 轰炸机3k</option>
+        <option value="4">△ 战斗机3k</option>
+        <option value="5">▣ 城市2k</option>
         <option value="6">☢ 核弹3k（发射井6k）</option>
-        <option value="7">🎯 指挥所2k</option>
+        <option value="7">☆ 指挥所2k</option>
     </select>
     <button id="btnSkip">跳过回合</button>
     <button id="exit-game-btn">退出游戏</button>
