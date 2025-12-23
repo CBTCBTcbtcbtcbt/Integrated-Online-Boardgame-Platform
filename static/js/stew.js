@@ -226,9 +226,8 @@ function renderGame() {
     // Show Result Modal if result exists
     if (gameState.last_result) {
         showResultModal(gameState.last_result);
-        // Clear result after showing so it doesn't pop up again on refresh? 
-        // Ideally backend handles this, or we just show it. 
-        // For now, we show it. 
+        // 显示后立即清除，防止重复弹出
+        gameState.last_result = null;
     }
 
     // Update Host Controls

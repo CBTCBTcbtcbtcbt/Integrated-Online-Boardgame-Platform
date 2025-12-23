@@ -40,6 +40,9 @@ class StewGame(BaseGame):
 
     def init_round(self):
         """Initialize a new round"""
+        # 注意：不在这里清除 last_result，因为前端需要在收到广播后渲染结果
+        # last_result 会在 handle_draw() 中清除，即用户开始新一轮抽牌时
+        
         # Create Deck
         print(f'[StewGame] Initializing new round ')
         self.deck = []
@@ -150,6 +153,11 @@ class StewGame(BaseGame):
         }
 
     def handle_draw(self, account):
+        # 新一轮开始的第一次抽牌时，清除上一轮的结果
+        # 这样确保前端有机会渲染结果后，后端才清除
+        if hasattr(self, 'last_result'):
+            delattr(self, 'last_result')
+        
         # current_player already set in init_round or updated after each action
         if account != self.current_player:
             return {'ok': False, 'msg': 'Not your turn'}
@@ -238,25 +246,7 @@ class StewGame(BaseGame):
             # Only current player can call
             if account != self.current_player:
                 return {'ok': False, 'msg': 'Cannot call Stew during another player\'s action phase'}
-            
-            # Must play card
-            action_type = data.get('action_type')
-            animal_index = data.get('animal_index')
-            
-            if not action_type:
-                return {'ok': False, 'msg': 'Must play your card when calling Stew'}
-            
-            if action_type == 'pot':
-                self.pot.append(self.current_card)
-            elif action_type == 'feed':
-                if animal_index is None or animal_index < 0 or animal_index >= len(self.animals):
-                    return {'ok': False, 'msg': 'Invalid animal'}
-                if self.animals[animal_index]['fed']:
-                    return {'ok': False, 'msg': 'Animal already fed'}
-                self.animals[animal_index]['fed'] = True
-            else:
-                 return {'ok': False, 'msg': 'Invalid action'}
-            
+
             msg = f'{account} called STEW!'
             self.resolve_stew(caller_index=caller_index)
             return {'ok': True, 'msg': msg, 'broadcast': True}
@@ -313,32 +303,45 @@ class StewGame(BaseGame):
             return False
 
         animal_actions = []
+        success = True
 
         # Boar: Eats 1 Garlic (5)
         if not self.animals[0]['fed']:
             if remove_card(5):
                 animal_actions.append("Boar ate a Garlic!")
+            else:
+                animal_actions.append("Boar is hungry!")
+                success = False
         
         # Fox: Eats Chicken (1)
         if not self.animals[1]['fed']:
             if remove_card(1):
                 animal_actions.append("Fox ate the Chicken!")
-        
+            else:
+                success = False
+                animal_actions.append("Fox is hungry!")
         # Gopher: Eats 1 Leek (4)
         if not self.animals[2]['fed']:
             if remove_card(4):
                 animal_actions.append("Gopher ate a Leek!")
+            else:
+                success = False
+                animal_actions.append("Gopher is hungry!")
 
         # Rabbit: Eats 1 Carrot (3)
         if not self.animals[3]['fed']:
             if remove_card(3):
                 animal_actions.append("Rabbit ate a Carrot!")
-        
+            else:
+                success = False
+                animal_actions.append("Rabbit is hungry!")
         # Raccoon: Eats 1 Potato (6)
         if not self.animals[4]['fed']:
             if remove_card(6):
                 animal_actions.append("Raccoon ate a Potato!")
-        
+            else:
+                success = False
+                animal_actions.append("Raccoon is hungry!")
         # Vagabond: 
         # -3 pts if Chicken in stew
         # +3 pts if Chicken NOT in stew
@@ -353,31 +356,32 @@ class StewGame(BaseGame):
                 animal_actions.append("Vagabond is happy there's no Chicken (+3 pts)!")
 
         # 3. Calculate Score
-        score = 0
-        counts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}
-        for cid in current_pot:
-            counts[cid] += 1
+        if success:
+            score = 0
+            counts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}
+            for cid in current_pot:
+                counts[cid] += 1
+                
+            # Chicken (1): 5 pts
+            score += counts[1] * 5
+            # Stone (2): -3 pts
+            score += counts[2] * (-3)
+            # Carrot (3): 2 pts
+            score += counts[3] * 2
+            # Leek (4): 3 pts
+            score += counts[4] * 3
+            # Garlic (5): 1 if >=2, else 6
+            if counts[5] >= 2:
+                score += counts[5] * 1
+            else:
+                score += counts[5] * 6
+            # Potato (6): count^2
+            score += counts[6] * counts[6]
             
-        # Chicken (1): 5 pts
-        score += counts[1] * 5
-        # Stone (2): -3 pts
-        score += counts[2] * (-3)
-        # Carrot (3): 2 pts
-        score += counts[3] * 2
-        # Leek (4): 3 pts
-        score += counts[4] * 3
-        # Garlic (5): 1 if >=2, else 6
-        if counts[5] >= 2:
-            score += counts[5] * 1
-        else:
-            score += counts[5] * 6
-        # Potato (6): count^2
-        score += counts[6] * counts[6]
-        
-        score += vagabond_mod
-        
-        # 4. Determine Success
-        success = score >= 12
+            score += vagabond_mod
+            
+            # 4. Determine Success
+            success = score >= 12
         
         # 5. Award Points - score_changes uses account as key for consistency with self.scores
         score_changes = {player['account']: 0 for player in self.players}
