@@ -324,6 +324,14 @@ def ccb():
     print("访问了ccb路由")
     return render_template('ccb.html')
 
+@app.route('/stew')
+def stew():
+    """
+    Stew游戏页面路由
+    """
+    print("访问了stew路由")
+    return render_template('stew.html')
+
 if __name__ == '__main__':
     """
     应用程序入口点

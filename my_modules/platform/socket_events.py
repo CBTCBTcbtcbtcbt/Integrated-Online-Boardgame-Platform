@@ -327,9 +327,9 @@ def init_socket_events(socketio, room_manager):
             update_user_room(account, room_id)
             
             # 获取玩家在游戏中的顺序（如果已选择游戏）
-            order = None
-            if room.game_instance and account in room.game_instance.players:
-                order = room.game_instance.players[account][1]  # 假设players结构为{account: [ID, order, ...]}
+            # order = None
+            # if room.game_instance and account in room.game_instance.players:
+            #     order = room.game_instance.players[account][1]  # 假设players结构为{account: [ID, order, ...]}
             
             print(f"用户 {account} 成功加入房间: {room_id}")
             
@@ -338,7 +338,7 @@ def init_socket_events(socketio, room_manager):
                 'ok': True,
                 'msg': '加入房间成功',
                 'room_id': room_id,
-                'order': order,  # 玩家在游戏中的顺序
+                #'order': order,  # 玩家在游戏中的顺序
                 'is_host': room.is_host(account)  # 是否为房主
             })
             

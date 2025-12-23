@@ -10,3 +10,5 @@ __pycache__/
 # 忽略操作系统自动生成的文件
 .DS_Store
 Thumbs.db
+users.json
+rule.md
