@@ -71,7 +71,7 @@ class MyGame(BaseGame):
     def handle_event(self, account, data):
         """核心：处理前端发来的事件"""
         event_name = data.get('event_name')
-        
+        event_data = data.get('event_data')
         if event_name == 'my_action':
             # 处理具体动作
             return {

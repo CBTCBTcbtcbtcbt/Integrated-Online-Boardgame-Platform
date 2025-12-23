@@ -98,7 +98,7 @@ def init_socket_events(socketio, room_manager):
                         print(f"用户 {account} 重新连接后游戏已开始，获取游戏状态")
                         
                         # 调用游戏算法库获取当前游戏状态
-                        game_state = room_manager.get_game_state(room_id)
+                        game_state = room_manager.get_game_state(room_id,account)
                         
                         # 发送重连成功响应，包含游戏状态用于刷新页面
                         emit('reconnect_response', {

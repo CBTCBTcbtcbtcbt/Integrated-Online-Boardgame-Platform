@@ -112,9 +112,9 @@ class StewGame(BaseGame):
             return True
         return False
 
-    def handle_event(self, account, data):
+    def handle_event(self, account,data):
         event_name = data.get('event_name')
-        
+        data = data.get('event_data')
         if event_name == 'draw':
             return self.handle_draw(account)
         elif event_name == 'action':
@@ -438,7 +438,10 @@ class StewGame(BaseGame):
         # If it's the requesting player's turn and they have a card, show it
         if account == self.current_player and self.current_card:
             state['my_card'] = self.current_card
-            
+        
+        if account == self.current_player:
+            state['is_my_turn'] = True
+        print(f'[StewGame] get_state for {account}: {state}')
         return state
 
 def register_game():

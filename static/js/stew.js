@@ -47,7 +47,7 @@ $(document).ready(function() {
         }
     });
 
-    socket.on('game_state_updated', function(data) {
+    socket.on('game_state_update', function(data) {
         console.log('Game State Updated:', data);
         if (data.game_state) {
             gameState = data.game_state;
@@ -95,6 +95,7 @@ $(document).ready(function() {
     });
 
     $('#pot-area').click(function() {
+        console.log('Clicked pot');
         handlePlayCard('pot');
     });
 
@@ -116,14 +117,11 @@ function checkAndRequestHand() {
 }
 
 function handlePlayCard(actionType, animalIndex = null) {
-    if (!gameState) return;
-    if (gameState.phase !== 'player_turn') return;
-    if (gameState.current_player_account !== myAccount) return;
 
     const eventName = isCallingStewMode ? 'call_stew' : 'action';
     
     socket.emit('game_event', {
-        event_name: eventName,
+        event_name: 'action',
         action_type: actionType,
         animal_index: animalIndex,
         token: token
@@ -169,6 +167,7 @@ function renderGame() {
         `);
         
         div.click(function() {
+            console.log('Clicked animal:', animal.name);
             handlePlayCard('feed', index);
         });
         
@@ -224,11 +223,11 @@ function renderGame() {
 function updateControls() {
     if (!gameState) return;
     
-    const isMyTurn = (gameState.current_player_account === myAccount);
+    const isMyTurn = gameState.is_my_turn || false;
     const hasCard = !!gameState.my_card;
-    
+    console.log("Is My Turn:", isMyTurn, "Has Card:", hasCard);
     // Draw Button
-    $('#btn-draw').prop('disabled', !(isMyTurn && gameState.phase === 'waiting_for_draw'));
+    $('#btn-draw').prop('disabled', !(isMyTurn ));
     
     // Call Stew Button
     // Enable if:

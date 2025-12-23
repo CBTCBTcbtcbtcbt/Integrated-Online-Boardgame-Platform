@@ -269,7 +269,7 @@ def handle_join_room(data):
     emit('join_room_response', {'ok': True, 'room_id': room_id})
     
     # 通知房间内所有人
-    socketio.emit('room_update', {
+    emit('room_update', {
         'players': room['players'],
         'game_id': room['game_id']
     }, room=room_id)
@@ -303,7 +303,7 @@ def handle_select_game(data):
     emit('select_game_response', {'ok': True, 'game_id': game_id})
     
     # 通知房间
-    socketio.emit('room_update', {
+    emit('room_update', {
         'players': room['players'],
         'game_id': room['game_id']
     }, room=room_id)
@@ -358,7 +358,7 @@ def handle_start_game(data):
             elif hasattr(game_instance, 'get_state'):
                 player_state = game_instance.get_state()
             
-            socketio.emit('game_started', {
+            emit('game_started', {
                 'ok': True,
                 'game_id': game_id,
                 'game_url': game_info['url'],
@@ -398,19 +398,24 @@ def handle_game_event(data):
     # 处理游戏事件
     try:
         result = game_instance.handle_event(account,data)
-        
+
+        emit('game_event_result', result)
         # 广播结果给房间内所有玩家
         for player in room['players']:
             player_state = game_instance.get_state(player)
-            socketio.emit('game_state_update', {
-                'state': player_state
-            }, room=room_id)
+            emit('game_state_update', {
+                'game_state': player_state
+            })
+            print(f'[DEV] 房间 {room_id} 玩家 {player} 游戏状态更新: {player_state}')
         
-        emit('game_event_result', result)
+        
         
     except Exception as e:
         print(f'[DEV] 游戏事件处理失败: {e}')
         emit('game_event_result', {'ok': False, 'msg': str(e)})
+
+    
+
 
 @socketio.on('leave_room')
 def handle_leave_room(data):

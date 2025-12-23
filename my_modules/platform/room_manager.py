@@ -292,7 +292,7 @@ class RoomManager:
             return room.game_instance.handle_return(account)
         return {'ok': False, 'msg': '游戏未开始'}
 
-    def get_game_state(self, room_id):
+    def get_game_state(self, room_id,account=0):
         """
         获取游戏状态
         
@@ -304,5 +304,5 @@ class RoomManager:
         """
         room = self.get_room(room_id)
         if room and room.game_instance:
-            return room.game_instance.get_state()
+            return room.game_instance.get_state(account)
         return None
