@@ -112,15 +112,15 @@ class StewGame(BaseGame):
             return True
         return False
 
-    def handle_event(self, account,data):
+    def handle_event(self, account, data):
         event_name = data.get('event_name')
-        data = data.get('event_data')
+        event_data = data.get('event_data') or {}  # 确保 event_data 不为 None
         if event_name == 'draw':
             return self.handle_draw(account)
         elif event_name == 'action':
-            return self.handle_action(account, data)
+            return self.handle_action(account, event_data)
         elif event_name == 'call_stew':
-            return self.handle_call_stew(account, data)
+            return self.handle_call_stew(account, event_data)
         elif event_name == 'reset_game':
             # Reset entire game (scores 0)
             if account != self.host:

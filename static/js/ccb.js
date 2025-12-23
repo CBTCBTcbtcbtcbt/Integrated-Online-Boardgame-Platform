@@ -156,7 +156,7 @@ socket.on('game_started', d => {
 });
 
 // 游戏状态更新（整合原 login.js 与 main.js 的处理）
-socket.on('game_state_updated', d => {
+socket.on('game_state_update', d => {
   if (d.room_id && currentRoom && d.room_id !== currentRoom) return;
 
   if (d.game_state) {

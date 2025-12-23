@@ -37,6 +37,10 @@ $(document).ready(function() {
     socket.on('reconnect_response', function(data) {
         console.log('Reconnect Response:', data);
         if (data.ok) {
+            // 保存当前用户账号
+            if (data.account) {
+                myAccount = data.account;
+            }
             if (data.game_state) {
                 gameState = data.game_state;
                 renderGame();
@@ -47,8 +51,9 @@ $(document).ready(function() {
         }
     });
 
+
     socket.on('game_state_update', function(data) {
-        console.log('Game State Updated:', data);
+        console.log('Game State Update:', data);
         if (data.game_state) {
             gameState = data.game_state;
             renderGame();
@@ -73,7 +78,10 @@ $(document).ready(function() {
 
     // Bind Controls
     $('#btn-draw').click(function() {
-        socket.emit('game_event', { event_name: 'draw' ,token: token});
+        socket.emit('game_event', { 
+            token: token,
+            event_name: 'draw'
+        });
     });
 
     $('#btn-call-stew').click(function() {
@@ -89,7 +97,10 @@ $(document).ready(function() {
         } else {
             // Direct call
             if (confirm("确定要现在喊炖菜吗？")) {
-                socket.emit('game_event', { event_name: 'call_stew',token: token });
+                socket.emit('game_event', { 
+                    token: token,
+                    event_name: 'call_stew'
+                });
             }
         }
     });
@@ -101,7 +112,10 @@ $(document).ready(function() {
 
     $('#btn-reset').click(function() {
         if (confirm("确定要重置游戏吗？")) {
-            socket.emit('game_event', { event_name: 'reset_game' ,token: token});
+            socket.emit('game_event', { 
+                token: token,
+                event_name: 'reset_game'
+            });
         }
     });
 
@@ -109,22 +123,28 @@ $(document).ready(function() {
 
 function checkAndRequestHand() {
     if (!gameState) return;
+    var token = localStorage.getItem('session_token');
     if (gameState.current_player_account === myAccount) {
         if (!gameState.my_card && gameState.phase === 'player_turn') {
-             socket.emit('game_event', { event_name: 'get_hand' ,token: token});
+             socket.emit('game_event', { 
+                 token: token,
+                 event_name: 'get_hand'
+             });
         }
     }
 }
 
 function handlePlayCard(actionType, animalIndex = null) {
-
+    var token = localStorage.getItem('session_token');
     const eventName = isCallingStewMode ? 'call_stew' : 'action';
     
     socket.emit('game_event', {
-        event_name: 'action',
-        action_type: actionType,
-        animal_index: animalIndex,
-        token: token
+        token: token,
+        event_name: eventName,
+        event_data: {
+            action_type: actionType,
+            animal_index: animalIndex
+        }
     });
     
     isCallingStewMode = false;

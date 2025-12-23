@@ -581,7 +581,7 @@ def init_socket_events(socketio, room_manager):
         
         if result.get('success'):
             # 获取初始游戏状态
-            game_state = room_manager.get_game_state(room_id)
+            game_state = room_manager.get_game_state(room_id,account)
             
             print(f"房间 {room_id} 游戏 {room.selected_game} 开始成功")
             
@@ -677,10 +677,19 @@ def init_socket_events(socketio, room_manager):
         # 发送事件响应给发起者（统一事件名为 game_event_result）
         emit('game_event_result', result)
         
-        # 如果事件需要广播，获取最新游戏状态并广播给房间内所有用户
-        if result.get('broadcast', False):
-            game_state = room_manager.get_game_state(room_id)
-            emit('game_state_updated', {
-                'room_id': room_id,
-                'game_state': game_state
-            }, room=room_id)
+        # 如果事件需要广播，为每个玩家单独发送带有其私有信息的 game_state
+        if result.get('broadcast', True):
+            # 获取房间信息
+            broadcast_room = room_manager.get_room(room_id)
+            if broadcast_room and broadcast_room.players:
+                # 遍历房间内所有玩家，为每个玩家发送个性化的 game_state
+                for player_account in broadcast_room.players:
+                    # 检查该玩家是否有活跃的 socket 连接
+                    if player_account in account_to_sid:
+                        player_sid = account_to_sid[player_account]
+                        # 获取该玩家专属的游戏状态（包含私有信息如 is_my_turn, my_card）
+                        player_game_state = room_manager.get_game_state(room_id, player_account)
+                        emit('game_state_update', {
+                            'room_id': room_id,
+                            'game_state': player_game_state
+                        }, to=player_sid)

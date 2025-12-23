@@ -214,7 +214,7 @@ socket.on('game_state_updated', (data) => {
 {
     'ok': True,             # 操作是否成功
     'msg': '提示信息',       # 用户提示
-    'broadcast': True,      # 特殊字段：若为True，平台会自动触发 game_state_updated 广播
+    'broadcast': True,      # 特殊字段：若为True，平台会自动触发 game_state_update 广播
     'custom_data': ...      # 其他自定义返回数据
 }
 ```
@@ -225,7 +225,7 @@ socket.on('game_state_updated', (data) => {
 |--------|------|------|
 | `game_event` | 前端 -> 后端 | 发送游戏操作 |
 | `game_event_result` | 后端 -> 前端 | 操作的直接反馈（仅发送者收到） |
-| `game_state_updated` | 后端 -> 前端 | 游戏状态更新广播（房间内所有人收到） |
+| `game_state_update` | 后端 -> 前端 | 游戏状态更新广播（房间内所有人收到） |
 | `reconnect_response` | 后端 -> 前端 | 断线重连后的状态同步 |
 
 ---
