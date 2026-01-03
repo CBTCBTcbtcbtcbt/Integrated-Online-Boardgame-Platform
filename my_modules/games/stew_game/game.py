@@ -356,8 +356,9 @@ class StewGame(BaseGame):
                 animal_actions.append("Vagabond is happy there's no Chicken (+3 pts)!")
 
         # 3. Calculate Score
+        score = 0
         if success:
-            score = 0
+            
             counts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}
             for cid in current_pot:
                 counts[cid] += 1
@@ -382,7 +383,7 @@ class StewGame(BaseGame):
             
             # 4. Determine Success
             success = score >= 12
-        
+        print(f'[StewGame] Stew called by {caller_account}, success: {success}, score: {score}')
         # 5. Award Points - score_changes uses account as key for consistency with self.scores
         score_changes = {player['account']: 0 for player in self.players}
         if success:

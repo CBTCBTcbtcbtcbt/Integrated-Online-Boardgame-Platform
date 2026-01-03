@@ -3,7 +3,7 @@
     "account": "dev_user1",
     "ID": "测试用户1",
     "password": "scrypt:32768:8:1$3TBztPxeOwQLQLRQ$d51a4d10ae2c09c718ba7a97fd2cc319392e740e262f3a67a3a05d6e8d6380064db163c2ee94fad67cd0812bb5441eeddecbc4275d9615349e829b881337006d",
-    "room": "dev_mjimbaii"
+    "room": "dev_mjs928ou"
   },
   "dev_user2": {
     "account": "dev_user2",
